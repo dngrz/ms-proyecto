@@ -1,0 +1,12 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    //jcenter()
+    jcenter {
+    	url 'http://192.168.1.106:8081/repository/jcenter/'
+    }
+}
+
+dependencies {
+}
