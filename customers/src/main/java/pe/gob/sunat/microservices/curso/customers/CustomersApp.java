@@ -14,6 +14,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.jdbi.v3.core.Jdbi;
 import pe.gob.sunat.microservices.curso.customers.CustomersConfiguration;
+import pe.gob.sunat.microservices.curso.customers.api.AddressResource;
 import pe.gob.sunat.microservices.curso.customers.api.CustomerResource;
 import pe.gob.sunat.microservices.curso.customers.client.OrderServiceClient;
 import pe.gob.sunat.microservices.curso.customers.client.OrderServiceClientUtil;
@@ -82,8 +83,10 @@ public class CustomersApp extends Application<CustomersConfiguration> {
     AddressService addressService = new AddressService(addressDao);
 
     CustomerResource customerResource = new CustomerResource(customerService, addressService);
+    AddressResource addressResource = new AddressResource(addressService);
 
     environment.jersey().register(customerResource);
+    environment.jersey().register(addressResource);
 
 
   }

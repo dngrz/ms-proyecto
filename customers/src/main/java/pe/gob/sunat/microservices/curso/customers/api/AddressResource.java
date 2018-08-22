@@ -28,5 +28,11 @@ public class AddressResource {
   public List<Address> find(@PathParam("id") Long id) {
     return addressService.addressesByCustomer(id);
   }
+  
+  @GET
+  @Path("/{id}")
+  public Optional<Address> findById(@PathParam("id") Long id) {
+    return addressService.addressesById(id);
+  }
 
 }

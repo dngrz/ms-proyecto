@@ -29,9 +29,11 @@ public class AddressServiceRemoteInvokerCommand extends HystrixCommand<Boolean> 
 
 	@Override
 	protected Boolean run() throws Exception {
-		Response<List<Address>> addresses = addressServiceClient.getByCustomer(customerId).execute();
-		boolean resultado = addresses.body().stream().anyMatch(s -> s.getId().equals(deliveryAddressId)); 
-		return resultado;
+		//Response<List<Address>> addresses = addressServiceClient.getByCustomer(customerId).execute();
+		Response<Address> address = addressServiceClient.getById(deliveryAddressId).execute();
+		//boolean resultado = addresses.body().stream().anyMatch(s -> s.getId().equals(deliveryAddressId));
+		Optional<Address> addressOptional = Optional.ofNullable(address.body());
+		return addressOptional.isPresent();
 	}
 
 	@Override

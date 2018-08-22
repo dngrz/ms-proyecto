@@ -77,6 +77,7 @@ public class OrdersApp extends Application<OrdersConfiguration> {
 
     CustomerService customerService = new CustomerService(customerServiceClient);
     AddressService addressService = new AddressService(addressServiceClient);
+    
     OrderService orderService = new OrderService(customerService, addressService, orderDao);
 
     OrderResource orderResource = new OrderResource(orderService);

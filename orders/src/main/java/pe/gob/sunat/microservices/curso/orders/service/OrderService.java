@@ -21,14 +21,14 @@ public class OrderService {
 	public Order create(Order order) {
 		Boolean validatedCustomer = customerService.validateCustomer(order.getCustomerId());
 
-		if (!validatedCustomer) {
-			throw new InvalidCustomerException("No se pudo validar al cliente. Se cancela la creación del pedido.",
-					order.getCustomerId().toString());
-		}
+//		if (!validatedCustomer) {
+//			throw new InvalidCustomerException("No se pudo validar al cliente. Se cancela la creación del pedido.",
+//					order.getCustomerId().toString());
+//		}
 
-		boolean validatedAddress = addressService.validateAddress(order.getCustomerId(), order.getDeliveryAddressId());
+		Boolean validatedAddress = addressService.validateAddress(order.getCustomerId(), order.getDeliveryAddressId());
 
-		if (!validatedAddress) {
+		if (!validatedAddress.booleanValue()) {
 			throw new InvalidCustomerException("No se pudo validar la direccion. Se cancela la creación del pedido.",
 					order.getCustomerId().toString());
 		}
