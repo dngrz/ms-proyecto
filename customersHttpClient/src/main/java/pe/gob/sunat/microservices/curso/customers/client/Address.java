@@ -46,4 +46,23 @@ public class Address {
   public void setCustomerId(Long customerId) {
     this.customerId = customerId;
   }
+
+@Override
+public String toString() {
+	StringBuilder builder = new StringBuilder();
+	builder.append("Address [id=");
+	builder.append(id);
+	builder.append(", street=");
+	builder.append(street);
+	builder.append(", name=");
+	builder.append(name);
+	builder.append(", country=");
+	builder.append(country);
+	builder.append(", customerId=");
+	builder.append(customerId);
+	builder.append("]");
+	return builder.toString();
+}
+  
+  
 }

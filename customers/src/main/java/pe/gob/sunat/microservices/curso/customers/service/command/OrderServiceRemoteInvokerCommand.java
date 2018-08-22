@@ -1,10 +1,14 @@
 package pe.gob.sunat.microservices.curso.customers.service.command;
 
+import java.util.List;
+
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 
+import pe.gob.sunat.microservices.curso.customers.client.Order;
 import pe.gob.sunat.microservices.curso.customers.client.OrderServiceClient;
+import retrofit2.Response;
 
 public class OrderServiceRemoteInvokerCommand extends HystrixCommand<Boolean> {
   public static final int CONCURRENT_REQUESTS = 20;
@@ -22,7 +26,8 @@ public class OrderServiceRemoteInvokerCommand extends HystrixCommand<Boolean> {
 
   @Override
   protected Boolean run() throws Exception {
-    return orderServiceClient.get(id).execute().isSuccessful();
+	  Response<List<Order>> orders = orderServiceClient.get(id).execute();
+    return !orders.body().isEmpty();
   }
 
   @Override

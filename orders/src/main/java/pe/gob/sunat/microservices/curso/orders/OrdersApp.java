@@ -19,6 +19,7 @@ import pe.gob.sunat.microservices.curso.customers.client.CustomerServiceClientUt
 import pe.gob.sunat.microservices.curso.monitoring.MonitoringUtil;
 import pe.gob.sunat.microservices.curso.orders.api.OrderResource;
 import pe.gob.sunat.microservices.curso.orders.dao.OrderDaoImpl;
+import pe.gob.sunat.microservices.curso.orders.service.AddressService;
 import pe.gob.sunat.microservices.curso.orders.service.CustomerService;
 import pe.gob.sunat.microservices.curso.orders.service.OrderService;
 import pe.gob.sunat.microservices.curso.security.SecurityUtil;
@@ -75,7 +76,8 @@ public class OrdersApp extends Application<OrdersConfiguration> {
     	        configuration.getCustomersServicePassword());
 
     CustomerService customerService = new CustomerService(customerServiceClient);
-    OrderService orderService = new OrderService(customerService, orderDao);
+    AddressService addressService = new AddressService(addressServiceClient);
+    OrderService orderService = new OrderService(customerService, addressService, orderDao);
 
     OrderResource orderResource = new OrderResource(orderService);
 
