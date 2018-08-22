@@ -48,5 +48,8 @@
         http :8080/v1/customers/2/addresses street="los lirios" name="store 2" country="Peru" customerId=2 --auth admin:admin123
         http :8080/v1/customers/2/addresses street="avenida larco" name="store principal" country="Peru" customerId=2 --auth admin:admin123
 
+        http :8080/v1/orders createdAt=2018-08-22 amount=1000 customerId=1 deliveryAddressId=2 --auth domix:secreto
+        http :8080/v1/orders createdAt=2018-08-22 amount=1000 customerId=1 deliveryAddressId=100 --auth domix:secreto
+
 
 
