@@ -1,13 +1,7 @@
 buildscript {
   repositories {
-    //jcenter()
-    jcenter {
-    	url 'http://192.168.1.106:8081/repository/jcenter/'
-    }
-    //mavenCentral()
-    maven {
-    	url 'http://192.168.1.106:8081/repository/maven-central/'
-    }
+    jcenter()
+    mavenCentral()
   }
   dependencies {
     classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.3'
@@ -77,14 +71,8 @@ dependencies {
 }
 
 repositories {
-    //jcenter()
-    jcenter {
-    	url 'http://192.168.1.106:8081/repository/jcenter/'
-    }
-    //mavenCentral()
-    maven {
-    	url 'http://192.168.1.106:8081/repository/maven-central/'
-    }
+    jcenter()
+    mavenCentral()
 }
 
 
