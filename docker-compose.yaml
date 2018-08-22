@@ -16,6 +16,7 @@ services:
     environment:
     - DATABASE_HOST=postgres
     - SECURITY_BASEURL=http://authenticator:8090/
+    - ORDERS_BASEURL=http://orders:9000/
     volumes:
     - ./customers/src/main/resources/config.yaml:/opt/config.yaml
     ports:

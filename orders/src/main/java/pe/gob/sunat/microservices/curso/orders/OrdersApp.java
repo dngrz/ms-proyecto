@@ -11,6 +11,9 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.jdbi.v3.core.Jdbi;
+
+import pe.gob.sunat.microservices.curso.customers.client.AddressServiceClient;
+import pe.gob.sunat.microservices.curso.customers.client.AddressServiceClientUtil;
 import pe.gob.sunat.microservices.curso.customers.client.CustomerServiceClient;
 import pe.gob.sunat.microservices.curso.customers.client.CustomerServiceClientUtil;
 import pe.gob.sunat.microservices.curso.monitoring.MonitoringUtil;
@@ -23,16 +26,16 @@ import pe.gob.sunat.microservices.curso.security.SecurityUtil;
 import java.util.Optional;
 
 
-public class App extends Application<AppConfiguration> {
+public class OrdersApp extends Application<OrdersConfiguration> {
   public static void main(String[] args) throws Exception {
-    new App().run(args);
+    new OrdersApp().run(args);
   }
 
   @Override
-  public void initialize(Bootstrap<AppConfiguration> bootstrap) {
-    bootstrap.addBundle(new MigrationsBundle<AppConfiguration>() {
+  public void initialize(Bootstrap<OrdersConfiguration> bootstrap) {
+    bootstrap.addBundle(new MigrationsBundle<OrdersConfiguration>() {
       @Override
-      public DataSourceFactory getDataSourceFactory(AppConfiguration configuration) {
+      public DataSourceFactory getDataSourceFactory(OrdersConfiguration configuration) {
         return configuration.getDataSourceFactory();
       }
     });
@@ -46,7 +49,7 @@ public class App extends Application<AppConfiguration> {
   }
 
   @Override
-  public void run(AppConfiguration configuration, Environment environment) throws Exception {
+  public void run(OrdersConfiguration configuration, Environment environment) throws Exception {
     Optional<HttpTracing> register = MonitoringUtil.register(configuration.getZipkinFactory(), environment);
     Tracing tracing = register.get().tracing();
 
@@ -63,6 +66,13 @@ public class App extends Application<AppConfiguration> {
         tracing,
         configuration.getCustomersServiceUsername(),
         configuration.getCustomersServicePassword());
+
+    AddressServiceClient addressServiceClient = AddressServiceClientUtil
+    	      .register(
+    	        configuration.getCustomersServiceBaseUrl(),
+    	        tracing,
+    	        configuration.getCustomersServiceUsername(),
+    	        configuration.getCustomersServicePassword());
 
     CustomerService customerService = new CustomerService(customerServiceClient);
     OrderService orderService = new OrderService(customerService, orderDao);

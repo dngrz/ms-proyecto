@@ -1,3 +1,8 @@
+
+ordersServiceBaseUrl: ${ORDERS_BASEURL:-http://localhost:9000/}
+ordersServiceUsername: domix
+ordersServicePassword: secreto
+
 securityServiceBaseUrl: ${SECURITY_BASEURL:-http://localhost:8090/}
 database:
   # the name of your JDBC driver

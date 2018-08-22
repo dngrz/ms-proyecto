@@ -12,6 +12,7 @@ public interface CustomerServiceClient {
 
   @GET("v1/customers/{id}")
   Call<Customer> get(@Path("id") Long id);
+
 }
 
 

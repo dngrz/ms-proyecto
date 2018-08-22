@@ -27,7 +27,7 @@ apply plugin: 'com.bmuschko.docker-remote-api'
 
 version "0.1-SNAPSHOT"
 
-mainClassName = "pe.gob.sunat.microservices.curso.orders.App"
+mainClassName = "pe.gob.sunat.microservices.curso.orders.OrdersApp"
 
 run {
   args += ['server', './src/main/resources/config.yaml']

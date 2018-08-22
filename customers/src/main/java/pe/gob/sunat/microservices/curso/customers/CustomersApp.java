@@ -13,8 +13,10 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.jdbi.v3.core.Jdbi;
-import pe.gob.sunat.microservices.curso.customers.AppConfiguration;
+import pe.gob.sunat.microservices.curso.customers.CustomersConfiguration;
 import pe.gob.sunat.microservices.curso.customers.api.CustomerResource;
+import pe.gob.sunat.microservices.curso.customers.client.OrderServiceClient;
+import pe.gob.sunat.microservices.curso.customers.client.OrderServiceClientUtil;
 import pe.gob.sunat.microservices.curso.customers.dao.AddressDaoImpl;
 import pe.gob.sunat.microservices.curso.customers.dao.CustomerDaoImpl;
 import pe.gob.sunat.microservices.curso.customers.service.AddressService;
@@ -25,16 +27,16 @@ import pe.gob.sunat.microservices.curso.security.SecurityUtil;
 import java.util.Optional;
 
 
-public class App extends Application<AppConfiguration> {
+public class CustomersApp extends Application<CustomersConfiguration> {
   public static void main(String[] args) throws Exception {
-    new App().run(args);
+    new CustomersApp().run(args);
   }
 
   @Override
-  public void initialize(Bootstrap<AppConfiguration> bootstrap) {
-    bootstrap.addBundle(new MigrationsBundle<AppConfiguration>() {
+  public void initialize(Bootstrap<CustomersConfiguration> bootstrap) {
+    bootstrap.addBundle(new MigrationsBundle<CustomersConfiguration>() {
       @Override
-      public DataSourceFactory getDataSourceFactory(AppConfiguration configuration) {
+      public DataSourceFactory getDataSourceFactory(CustomersConfiguration configuration) {
         return configuration.getDataSourceFactory();
       }
     });
@@ -46,9 +48,9 @@ public class App extends Application<AppConfiguration> {
     );
 
     bootstrap.addBundle(
-      new ZipkinBundle<AppConfiguration>(getName()) {
+      new ZipkinBundle<CustomersConfiguration>(getName()) {
         @Override
-        public ZipkinFactory getZipkinFactory(AppConfiguration configuration) {
+        public ZipkinFactory getZipkinFactory(CustomersConfiguration configuration) {
           return configuration.getZipkinFactory();
         }
       });
@@ -56,7 +58,7 @@ public class App extends Application<AppConfiguration> {
   }
 
   @Override
-  public void run(AppConfiguration configuration, Environment environment) throws Exception {
+  public void run(CustomersConfiguration configuration, Environment environment) throws Exception {
     Optional<HttpTracing> register = MonitoringUtil.register(configuration.getZipkinFactory(), environment);
     Tracing tracing = register.get().tracing();
 
@@ -64,11 +66,19 @@ public class App extends Application<AppConfiguration> {
 
     final JdbiFactory factory = new JdbiFactory();
     final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "postgresql");
+    
+    OrderServiceClient orderServiceClient = OrderServiceClientUtil
+    	      .register(
+    	        configuration.getOrdersServiceBaseUrl(),
+    	        tracing,
+    	        configuration.getOrdersServiceUsername(),
+    	        configuration.getOrdersServicePassword());
+    
 
     CustomerDaoImpl customerDao = new CustomerDaoImpl(jdbi);
     AddressDaoImpl addressDao = new AddressDaoImpl(jdbi);
 
-    CustomerService customerService = new CustomerService(customerDao, addressDao);
+    CustomerService customerService = new CustomerService(customerDao, addressDao, orderServiceClient);
     AddressService addressService = new AddressService(addressDao);
 
     CustomerResource customerResource = new CustomerResource(customerService, addressService);
